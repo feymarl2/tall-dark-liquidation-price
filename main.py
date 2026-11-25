@@ -1,21 +1,28 @@
 #!/usr/bin/env python3
-"""Entry for make.fun bounty u-clever-harbor-75-fortune-cookie-for-the-liquidated-38fd239c.
+"""Fortune-cookie entry: one line for a freshly liquidated trader.
 
-Writes the entry text to /output/entry.txt. Stdlib only, no network,
-no clock, no randomness: byte-identical output on every run.
+Running this file writes the fortune text into entry.txt inside the
+output folder named by MAKEFUN_OUTPUT_DIR (default /output). Only the
+standard library is used, and the bytes written never change between
+runs: no clock, no randomness, no network.
 """
 
+from pathlib import Path
 import os
 
-TEXT = 'You will meet a tall dark stranger: your liquidation price, again, at a better entry.'
+FORTUNE = "You will meet a tall dark stranger: your liquidation price, again, at a better entry."
+ENTRY_NAME = "entry.txt"
 
 
-def main():
-    out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
-    os.makedirs(out_dir, exist_ok=True)
-    with open(os.path.join(out_dir, "entry.txt"), "w", encoding="utf-8", newline="") as f:
-        f.write(TEXT)
+def output_folder() -> Path:
+    return Path(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"))
+
+
+def write_fortune() -> None:
+    folder = output_folder()
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / ENTRY_NAME).write_text(FORTUNE, encoding="utf-8", newline="")
 
 
 if __name__ == "__main__":
-    main()
+    write_fortune()
